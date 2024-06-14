@@ -131,3 +131,8 @@ variable "version" {
   type        = string
   description = "The semantic version number for the AMI; the version string will be appended automatically to the name tags added to the resulting AMI and snapshot(s)"
 }
+
+variable "boot_mode" {
+  type        = string
+  description = "Determines whether an instance should boot with in either legacy-bios or uefi mode"
+}
