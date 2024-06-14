@@ -1,1 +1,121 @@
 ---
+- hosts: rhel9-base
+  become: true
+  collections:
+    - ch_collections.base
+    - ch-collections.security_banner
+  pre_tasks:
+
+    - name: Updating System Packages Before Ansible Run
+      package:
+        name: '*'
+        state: latest
+
+    - name: CodeReady repo check
+      block:
+        - name: Check CodeReady repo exists but disabled
+          ansible.builtin.stat:
+            path: /etc/yum.repos.d/redhat-rhui.repo.disabled
+          register: repo_disabled
+        - name: Move redhat-rhui repo file to enabled
+          ansible.builtin.copy:
+            src: /etc/yum.repos.d/redhat-rhui.repo.disabled
+            dest: /etc/yum.repos.d/redhat-rhui.repo
+            remote_src: yes
+          when: repo_disabled.stat.exists
+        - name: show contents of repo folder
+          find:
+            paths: /etc/yum.repos.d/
+        - name: Check CodeReady repo exists and enabled
+          ansible.builtin.stat:
+            path: /etc/yum.repos.d/redhat-rhui.repo
+          register: repo_exists
+        - name: Enable CodeReady repo on RHEL9
+          ini_file: 
+            dest: /etc/yum.repos.d/redhat-rhui.repo
+            section: codeready-builder-for-rhel-9-rhui-rpms
+            option: enabled
+            value: "1"
+          when: repo_exists.stat.exists
+      when: (ansible_os_family == 'RedHat') and (ansible_distribution_major_version | int == 9)
+
+    - name: Enable AWS SSM GPG
+      block:
+        - name: Copy GPG key
+          copy:
+            src: amazon-ssm-agent.gpg
+            dest: /tmp/amazon-ssm-agent.gpg
+            owner: root
+            group: root
+            mode: '0644'
+        - name: Import GPG key
+          ansible.builtin.rpm_key:
+            key: /tmp/amazon-ssm-agent.gpg
+            state: present
+        - name: Verify the key, using a fingerprint, before import
+          ansible.builtin.rpm_key:
+            key: /tmp/amazon-ssm-agent.gpg
+            fingerprint: DE92 C7DA 3E56 E923 31D6  2A36 BC1F 495C 97DD 04ED
+            validate_certs: no
+
+    - name: Set timezone to Europe/London
+      community.general.timezone:
+        name: Europe/London
+
+  roles:
+    - geerlingguy.repo-epel
+    - ch_collections.base.os_package_control
+    - ch_collections.base.pip
+    - ch_collections.base.auditd
+    - RHEL9-CIS
+    - ch_collections.base.clamav
+    - cloudwatch-agent
+    - ch_collections.base.cloudwatch_agent_helper
+    - ch_collections.base.cron_control
+    - ch_collections.security_banner.banner
+    
+  tasks: 
+    - name: update iscsi config setting
+      lineinfile: 
+        path: /etc/iscsi/iscsid.conf
+        regexp: '^node.session.timeo.replacement_timeout = 120' 
+        line: 'node.session.timeo.replacement_timeout = 5'
+        backrefs: yes
+
+    - name: Run multipath config tool to enable multipath and disable user friendly names
+      command: mpathconf --enable --with_multipathd y --user_friendly_names n
+      args:
+        creates: /etc/multipath.conf
+
+    - name: Make sure aws ssm agent is enabled
+      service:
+        name: amazon-ssm-agent
+        state: stopped
+        enabled: yes
+
+    - name: Create persistent SELinux boolean policies
+      ansible.posix.seboolean:
+        name: "{{ item }}"
+        state: yes
+        persistent: yes
+      loop: "{{ selinux_policies }}"
+      when: ansible_virtualization_type != "docker"
+
+    - name: service chronyd
+      service:
+        name: chronyd
+        state: started
+        enabled: yes
+        
+    - name: Restrict Kernel log access
+      block:
+        - name: Copy kernel hardening file
+          ansible.builtin.copy:
+            src: 10-kernel-hardening.conf
+            dest: /etc/sysctl.d/10-kernel-hardening.conf
+            owner: root
+            group: root
+            mode: '0600'
+        - name: Update Kernel Parameters
+          command: sysctl -p
+

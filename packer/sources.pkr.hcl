@@ -11,6 +11,7 @@ source "amazon-ebs" "builder" {
   ssh_username              = var.ssh_username
   ssh_keypair_name          = "packer-builders-${var.aws_region}"
   iam_instance_profile      = "packer-builders-${var.aws_region}"
+  boot_mode                 = "legacy-bios"
 
   launch_block_device_mappings {
     delete_on_termination = true
@@ -23,17 +24,6 @@ source "amazon-ebs" "builder" {
     volume_type           = "gp3"
   }
 
-  launch_block_device_mappings {
-    delete_on_termination = true
-    device_name           = "/dev/xvdb"
-    encrypted             = true
-    iops                  = var.data_volume_iops
-    kms_key_id            = var.kms_key_id
-    throughput            = var.data_volume_throughput
-    volume_size           = var.data_volume_size_gib
-    volume_type           = "gp3"
-  }
-
   security_group_filter {
     filters = {
       "group-name": "packer-builders-${var.aws_region}"
@@ -43,6 +33,7 @@ source "amazon-ebs" "builder" {
   source_ami_filter {
     filters = {
       virtualization-type = "hvm"
+      architecture-type = "x86_64"
       name =  "${var.aws_source_ami_filter_name}"
       root-device-type = "ebs"
     }

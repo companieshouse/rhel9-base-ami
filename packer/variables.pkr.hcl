@@ -5,8 +5,14 @@ variable "ami_account_ids" {
 
 variable "ami_name_prefix" {
   type        = string
-  default     = "unnamed"
+  default     = "rhel9-base"
   description = "The prefix string that will be used for the name tags of the resulting AMI and snapshot(s); the version string will be appended automatically"
+}
+
+variable "ansible_host_alias" {
+  type        = string
+  default     = "rhel9-base"
+  description = "The Ansible host alias"
 }
 
 variable "aws_instance_type" {
@@ -23,12 +29,13 @@ variable "aws_region" {
 
 variable "aws_source_ami_filter_name" {
   type        = string
-  default     = "amzn2-base-*"
+  default     = "RHEL-9.4.0_HVM-*"
   description = "The source AMI filter string. Any filter described by the DescribeImages API documentation is valid. If multiple images match then the latest will be used"
 }
 
 variable "aws_source_ami_owner_id" {
   type        = string
+  default     = "309956199498"
   description = "The source AMI owner ID; used in combination with aws_source_ami_filter_name to filter for matching source AMIs"
 }
 
@@ -123,4 +130,9 @@ variable "ssh_username" {
 variable "version" {
   type        = string
   description = "The semantic version number for the AMI; the version string will be appended automatically to the name tags added to the resulting AMI and snapshot(s)"
+}
+
+variable "boot_mode" {
+  type        = string
+  description = "Determines whether an instance should boot with in either legacy-bios or uefi mode"
 }
