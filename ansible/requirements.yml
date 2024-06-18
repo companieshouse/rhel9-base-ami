@@ -24,3 +24,4 @@ roles:
   
   - src: https://github.com/christiangda/ansible-role-amazon-cloudwatch-agent.git
     name: cloudwatch-agent
+    
