@@ -32,7 +32,7 @@ source "amazon-ebs" "builder" {
   source_ami_filter {
     filters = {
       virtualization-type = "hvm"
-      architecture-type = "x86_64"
+      architecture-type = "64-bit(x86)"
       name =  "${var.aws_source_ami_filter_name}"
       root-device-type = "ebs"
     }
