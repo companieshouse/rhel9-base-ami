@@ -50,24 +50,6 @@ variable "configuration_group" {
   description = "The name of the group to which to add the instance for configuration purposes"
 }
 
-variable "data_volume_iops" {
-  type        = number
-  default     = 3000
-  description = "The baseline IOPS for the data EBS volume; 3000 is the gp3 default"
-}
-
-variable "data_volume_size_gib" {
-  type        = number
-  default     = 0
-  description = "The EC2 instance data volume size in Gibibytes (GiB)"
-}
-
-variable "data_volume_throughput" {
-  type        = number
-  default     = 125
-  description = "The throughput, in MiB/s, for the data EBS volume; 125 is the gp3 default"
-}
-
 variable "force_delete_snapshot" {
   type        = bool
   default     = false
@@ -131,10 +113,4 @@ variable "ssh_username" {
 variable "version" {
   type        = string
   description = "The semantic version number for the AMI; the version string will be appended automatically to the name tags added to the resulting AMI and snapshot(s)"
-}
-
-variable "boot_mode" {
-  type        = string
-  default     = "legacy-bios"
-  description = "Determines whether an instance should boot with in either legacy-bios or uefi mode"
 }

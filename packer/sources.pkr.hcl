@@ -11,7 +11,6 @@ source "amazon-ebs" "builder" {
   ssh_username              = var.ssh_username
   ssh_keypair_name          = "packer-builders-${var.aws_region}"
   iam_instance_profile      = "packer-builders-${var.aws_region}"
-  boot_mode                 = var.boot_mode
 
   launch_block_device_mappings {
     delete_on_termination = true
