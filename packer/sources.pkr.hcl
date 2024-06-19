@@ -15,7 +15,6 @@ source "amazon-ebs" "builder" {
   launch_block_device_mappings {
     delete_on_termination = true
     device_name           = "/dev/sda1"
-    encrypted             = true
     iops                  = var.root_volume_iops
     kms_key_id            = var.kms_key_id
     throughput            = var.root_volume_throughput
