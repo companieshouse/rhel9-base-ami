@@ -11,9 +11,7 @@ collections:
     type: git
 
 roles:
-  - src: https://github.com/geerlingguy/ansible-role-repo-epel
-    name: epel
-    version: 3.1.1
+  - name: geerlingguy.repo-epel
   - src: https://github.com/ansible-lockdown/RHEL9-CIS.git
     name: RHEL9-CIS
     version: 1.3.1
