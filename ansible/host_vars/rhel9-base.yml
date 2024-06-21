@@ -51,5 +51,6 @@ rhel9cis_host_allow:
   - "10.0.0.0/255.0.0.0"
   - "172.16.0.0/255.240.0.0"
   - "192.168.0.0/255.255.0.0"
-
+#Disable password set for ec2-user
+rhel9cis_rule_5_3_4: false
 
