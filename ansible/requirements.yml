@@ -12,6 +12,7 @@ collections:
 
 roles:
   - name: geerlingguy.repo-epel
+  - name: geerlingguy.clamav
   - src: https://github.com/ansible-lockdown/RHEL9-CIS.git
     name: RHEL9-CIS
     version: 1.3.1
