@@ -46,8 +46,7 @@ rhel9cis_rule_1_4_2: false
 rhel9cis_rule_3_4_1: false
 rhel9cis_rule_3_4_2: false
 #Disable password set for ec2-user
-rhel9cis_rule_5_3_4_enable: false
-rhel9cis_rule_5_3_4: false
+rhel9cis_rule_5_3: false
 # Setup hosts.allow entries
 rhel9cis_host_allow:
   - "127.0.0.1"
