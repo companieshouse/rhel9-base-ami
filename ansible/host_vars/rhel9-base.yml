@@ -45,12 +45,12 @@ rhel9cis_rule_1_4_2: false
 #Disable Firewall Tasks, we manage this in app deploy
 rhel9cis_rule_3_4_1: false
 rhel9cis_rule_3_4_2: false
+#Disable password set for ec2-user
+rhel9cis_rule_5_3_4_enable: false
+rhel9cis_rule_5_3_4: false
 # Setup hosts.allow entries
 rhel9cis_host_allow:
   - "127.0.0.1"
   - "10.0.0.0/255.0.0.0"
   - "172.16.0.0/255.240.0.0"
   - "192.168.0.0/255.255.0.0"
-#Disable password set for ec2-user
-rhel9cis_rule_5_3_4_enable: false
-rhel9cis_rule_5_3_4: false
