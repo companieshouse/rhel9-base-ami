@@ -38,15 +38,16 @@ rhel9cis_time_synchronization: chrony
 rhel9cis_time_synchronization_servers: ["169.254.169.123"] #Default VPC source
 #Disable crypto setting changes as it causes DNF to fail installs
 rhel9cis_rule_1_10: false
-#Disable rsyslog/syslog-ng, using cloudwatch
-rhel9cis_rule_4_2_1: false
 #Disable GRUB tasks
 rhel9cis_rule_1_4_2: false
 #Disable Firewall Tasks, we manage this in app deploy
 rhel9cis_rule_3_4_1: false
 rhel9cis_rule_3_4_2: false
+#Disable rsyslog/syslog-ng, using cloudwatch
+rhel9cis_rule_4_2_1: false
 #Disable password set for ec2-user
 rhel9cis_rule_5_3: false
+rhel9cis_rule_5_3_4: false
 # Setup hosts.allow entries
 rhel9cis_host_allow:
   - "127.0.0.1"
