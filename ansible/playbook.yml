@@ -43,6 +43,9 @@
       community.general.timezone:
         name: Europe/London
 
+    - name: Install cloudwatch agent
+      ansible.builtin.command: sudo dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+
   roles:
     - geerlingguy.repo-epel
     - ch_collections.base.os_package_control
@@ -50,7 +53,7 @@
     - ch_collections.base.auditd
     # - ch_collections.base.clamav
     - geerlingguy.clamav
-    - cloudwatch-agent
+    # - cloudwatch-agent
     - ch_collections.base.cloudwatch_agent_helper
     - ch_collections.base.cron_control
     - ch_collections.security_banner.banner
