@@ -3,7 +3,6 @@
   become: true
   collections:
     - ch_collections.base
-    - ch-collections.security_banner
   pre_tasks:
 
     - name: Updating System Packages Before Ansible Run
@@ -44,8 +43,12 @@
         name: Europe/London
 
     - name: Install cloudwatch agent
-      ansible.builtin.command: sudo dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
-
+      ansible.builtin.command: dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+    - name: Enable cloudwatch agent
+      ansible.builtin.command: systemctl enable amazon-ssm-agent
+    - name: Enable cloudwatch agent
+      ansible.builtin.command: systemctl start amazon-ssm-agent
+      
   roles:
     - geerlingguy.repo-epel
     - ch_collections.base.os_package_control
