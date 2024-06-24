@@ -1,6 +1,8 @@
 ---
 - hosts: all
   become: true
+  vars_files: 
+    - rhel9-base.yml
   collections:
     - ch_collections.base
   pre_tasks:
@@ -9,7 +11,6 @@
       package:
         name: '*'
         state: latest
-
     - name: CodeReady repo check
       block:
         - name: Check CodeReady repo exists but disabled
@@ -50,7 +51,7 @@
       ansible.builtin.command: systemctl start amazon-ssm-agent
 
   roles:
-    - RHEL9-CIS
+    
     - geerlingguy.repo-epel
     - ch_collections.base.os_package_control
     - ch_collections.base.pip
@@ -61,6 +62,7 @@
     - ch_collections.base.cloudwatch_agent_helper
     - ch_collections.base.cron_control
     - ch_collections.security_banner.banner
+    - RHEL9-CIS
 
     
   tasks: 
