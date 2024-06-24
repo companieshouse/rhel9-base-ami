@@ -46,7 +46,7 @@ variable "aws_subnet_filter_name" {
 
 variable "configuration_group" {
   type        = string
-  default     = "unnamed"
+  default     = "rhel9-base"
   description = "The name of the group to which to add the instance for configuration purposes"
 }
 
