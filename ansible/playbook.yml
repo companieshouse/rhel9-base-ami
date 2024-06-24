@@ -48,19 +48,20 @@
       ansible.builtin.command: systemctl enable amazon-ssm-agent
     - name: Enable cloudwatch agent
       ansible.builtin.command: systemctl start amazon-ssm-agent
-      
+
   roles:
+    - RHEL9-CIS
     - geerlingguy.repo-epel
     - ch_collections.base.os_package_control
     - ch_collections.base.pip
     - ch_collections.base.auditd
-    # - ch_collections.base.clamav
+    # - ch_collections.base.clamav ## added below
     - geerlingguy.clamav
-    # - cloudwatch-agent
+    # - cloudwatch-agent - added command
     - ch_collections.base.cloudwatch_agent_helper
     - ch_collections.base.cron_control
     - ch_collections.security_banner.banner
-    - RHEL9-CIS
+
     
   tasks: 
     - name: update iscsi config setting
