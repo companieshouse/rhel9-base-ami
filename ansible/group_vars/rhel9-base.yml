@@ -15,7 +15,7 @@ additional_packages:
   - python3-libsemanage
   - python3-policycoreutils
   - python39
-  # - python39-pip
+  - python39-pip
   - chrony
 
 pip_install_packages:
