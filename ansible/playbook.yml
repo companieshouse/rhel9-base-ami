@@ -1,14 +1,9 @@
 ---
 - hosts: rhel9-base
   become: true
-  vars_files:
-    - rhel9-base.yml
   collections:
     - ch_collections.base
   pre_tasks:
-
-    - name: Clean all
-      ansible.builtin.command: dnf clean all 
     - name: Updating System Packages Before Ansible Run
       package:
         name: '*'
