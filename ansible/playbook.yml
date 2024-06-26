@@ -59,7 +59,7 @@
     - ch_collections.base.cloudwatch_agent_helper
     - ch_collections.base.cron_control
     - ch_collections.security_banner.banner
-    # - RHEL9-CIS
+    - RHEL9-CIS
 
     
   tasks: 
@@ -80,14 +80,6 @@
         name: amazon-ssm-agent
         state: stopped
         enabled: yes
-
-    # - name: Create persistent SELinux boolean policies
-    #   ansible.posix.seboolean:
-    #     name: "{{ item }}"
-    #     state: yes
-    #     persistent: yes
-    #   loop: "{{ selinux_policies }}"
-    #   when: ansible_virtualization_type != "docker"
 
     - name: service chronyd
       service:
