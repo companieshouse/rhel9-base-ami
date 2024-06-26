@@ -81,13 +81,13 @@
         state: stopped
         enabled: yes
 
-    - name: Create persistent SELinux boolean policies
-      ansible.posix.seboolean:
-        name: "{{ item }}"
-        state: yes
-        persistent: yes
-      loop: "{{ selinux_policies }}"
-      when: ansible_virtualization_type != "docker"
+    # - name: Create persistent SELinux boolean policies
+    #   ansible.posix.seboolean:
+    #     name: "{{ item }}"
+    #     state: yes
+    #     persistent: yes
+    #   loop: "{{ selinux_policies }}"
+    #   when: ansible_virtualization_type != "docker"
 
     - name: service chronyd
       service:
