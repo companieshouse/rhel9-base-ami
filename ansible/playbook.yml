@@ -49,17 +49,17 @@
 
   roles:
     
-    - geerlingguy.repo-epel
-    - ch_collections.base.os_package_control
-    - ch_collections.base.pip
+    # - geerlingguy.repo-epel
+    # - ch_collections.base.os_package_control
+    # - ch_collections.base.pip
     - ch_collections.base.auditd
     - RHEL9-CIS
     # - ch_collections.base.clamav ## added below
-    - geerlingguy.clamav
+    # - geerlingguy.clamav
     # - cloudwatch-agent - added command
-    - ch_collections.base.cloudwatch_agent_helper
-    - ch_collections.base.cron_control
-    - ch_collections.security_banner.banner
+    # - ch_collections.base.cloudwatch_agent_helper
+    # - ch_collections.base.cron_control
+    # - ch_collections.security_banner.banner
 
 
     
