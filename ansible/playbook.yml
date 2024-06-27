@@ -48,7 +48,6 @@
       ansible.builtin.command: systemctl start amazon-ssm-agent
 
   roles:
-    
     - geerlingguy.repo-epel
     - ch_collections.base.os_package_control
     - ch_collections.base.pip
