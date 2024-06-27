@@ -96,14 +96,6 @@
         - admin_space_left_action: rotate
         - log_format: "ENRICHED"
    
-    - name: Configure rsyslog
-      ansible.builtin.lineinfile:
-        path:  "/etc/audit/plugins.d/syslog.conf"
-        regexp: '^{{ item.key }}\s*=.*$'
-        line: "{{ item.key }} = {{ item.value }}"
-      with_dict: 
-        - active: "yes"
-
     - name: Configure grub commandline options
       ansible.builtin.lineinfile:
         path: "/etc/default/grub"
@@ -116,15 +108,6 @@
     - name: Generate audit rules
       ansible.builtin.command: 
         cmd: augenrules --load
-
-    - name: Enable Services
-      ansible.builtin.service:
-        name: "{{ item }}"
-        enabled: yes
-        state: started
-      loop:
-        - rsyslog
-        - auditd
         
     - name: Restrict Kernel log access
       block:
