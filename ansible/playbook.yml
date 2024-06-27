@@ -52,15 +52,12 @@
     - geerlingguy.repo-epel
     - ch_collections.base.os_package_control
     - ch_collections.base.pip
-    # - ch_collections.base.auditd
     - RHEL9-CIS
     - geerlingguy.clamav
     - ch_collections.base.cloudwatch_agent_helper
     - ch_collections.base.cron_control
     - ch_collections.security_banner.banner
 
-
-    
   tasks: 
     - name: update iscsi config setting
       lineinfile: 
@@ -85,6 +82,49 @@
         name: chronyd
         state: started
         enabled: yes
+
+    - name: Configure auditd service
+      ansible.builtin.lineinfile:
+        path:  "/etc/audit/auditd.conf"
+        regexp: '^{{ item.key }}\s*=.*$'
+        line: "{{ item.key }} = {{ item.value }}"
+      with_dict: 
+        - max_log_file: 50
+        - max_log_file_action: rotate
+        - space_left_action: email
+        - action_mail_acct: root
+        - admin_space_left_action: rotate
+        - log_format: "ENRICHED"
+   
+    - name: Configure rsyslog
+      ansible.builtin.lineinfile:
+        path:  "/etc/audit/plugins.d/syslog.conf"
+        regexp: '^{{ item.key }}\s*=.*$'
+        line: "{{ item.key }} = {{ item.value }}"
+      with_dict: 
+        - active: "yes"
+
+    - name: Configure grub commandline options
+      ansible.builtin.lineinfile:
+        path: "/etc/default/grub"
+        regexp: '^(GRUB_CMDLINE_LINUX=(?:(?![" ]{{ item.key | regex_escape }}=).)*)(?:[" ]{{ item.key | regex_escape }}=\S+)?(.*")$'
+        line: '\1 {{ item.key | regex_escape }}={{ item.value | regex_escape }}\2'
+        backrefs: yes
+      with_dict: 
+        - audit: 1  
+
+    - name: Generate audit rules
+      ansible.builtin.command: 
+        cmd: augenrules --load
+
+    - name: Enable Services
+      ansible.builtin.service:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+      loop:
+        - rsyslog
+        - auditd
         
     - name: Restrict Kernel log access
       block:
