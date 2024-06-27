@@ -104,10 +104,6 @@
         backrefs: yes
       with_dict: 
         - audit: 1  
-
-    - name: Generate audit rules
-      ansible.builtin.command: 
-        cmd: augenrules --load
         
     - name: Restrict Kernel log access
       block:
@@ -121,4 +117,3 @@
             
     - name: Update Kernel Parameters
       command: sysctl -p
-
