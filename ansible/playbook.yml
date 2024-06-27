@@ -4,12 +4,10 @@
   collections:
     - ch_collections.base
   pre_tasks:
-
     - name: Updating System Packages Before Ansible Run
       package:
         name: '*'
         state: latest
-
     - name: CodeReady repo check
       block:
         - name: Check CodeReady repo exists but disabled
@@ -42,17 +40,23 @@
       community.general.timezone:
         name: Europe/London
 
+    - name: Install cloudwatch agent
+      ansible.builtin.command: dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+    - name: Enable cloudwatch agent
+      ansible.builtin.command: systemctl enable amazon-ssm-agent
+    - name: Enable cloudwatch agent
+      ansible.builtin.command: systemctl start amazon-ssm-agent
+
   roles:
     - geerlingguy.repo-epel
     - ch_collections.base.os_package_control
     - ch_collections.base.pip
-    - ch_collections.base.auditd
     - RHEL9-CIS
-    - ch_collections.base.clamav
-    - cloudwatch-agent
+    - geerlingguy.clamav
     - ch_collections.base.cloudwatch_agent_helper
     - ch_collections.base.cron_control
-    
+    - ch_collections.security_banner.banner
+
   tasks: 
     - name: update iscsi config setting
       lineinfile: 
@@ -72,19 +76,33 @@
         state: stopped
         enabled: yes
 
-    - name: Create persistent SELinux boolean policies
-      ansible.posix.seboolean:
-        name: "{{ item }}"
-        state: yes
-        persistent: yes
-      loop: "{{ selinux_policies }}"
-      when: ansible_virtualization_type != "docker"
-
     - name: service chronyd
       service:
         name: chronyd
         state: started
         enabled: yes
+
+    - name: Configure auditd service
+      ansible.builtin.lineinfile:
+        path:  "/etc/audit/auditd.conf"
+        regexp: '^{{ item.key }}\s*=.*$'
+        line: "{{ item.key }} = {{ item.value }}"
+      with_dict: 
+        - max_log_file: 50
+        - max_log_file_action: rotate
+        - space_left_action: email
+        - action_mail_acct: root
+        - admin_space_left_action: rotate
+        - log_format: "ENRICHED"
+   
+    - name: Configure grub commandline options
+      ansible.builtin.lineinfile:
+        path: "/etc/default/grub"
+        regexp: '^(GRUB_CMDLINE_LINUX=(?:(?![" ]{{ item.key | regex_escape }}=).)*)(?:[" ]{{ item.key | regex_escape }}=\S+)?(.*")$'
+        line: '\1 {{ item.key | regex_escape }}={{ item.value | regex_escape }}\2'
+        backrefs: yes
+      with_dict: 
+        - audit: 1  
         
     - name: Restrict Kernel log access
       block:
@@ -95,6 +113,6 @@
             owner: root
             group: root
             mode: '0600'
-        - name: Update Kernel Parameters
-          command: sysctl -p
-
+            
+    - name: Update Kernel Parameters
+      command: sysctl -p

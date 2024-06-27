@@ -15,8 +15,11 @@ additional_packages:
   - python3-libsemanage
   - python3-policycoreutils
   - python39
-  - python39-pip
   - chrony
+  - audit
+  - audit-libs
+  - audispd-plugins
+  - rsyslog
 
 pip_install_packages:
   - name: pip
@@ -38,18 +41,22 @@ rhel9cis_time_synchronization: chrony
 rhel9cis_time_synchronization_servers: ["169.254.169.123"] #Default VPC source
 #Disable crypto setting changes as it causes DNF to fail installs
 rhel9cis_rule_1_10: false
-#Disable rsyslog/syslog-ng, using cloudwatch
-rhel9cis_rule_4_2_1: false
 #Disable GRUB tasks
 rhel9cis_rule_1_4_2: false
 #Disable Firewall Tasks, we manage this in app deploy
 rhel9cis_rule_3_4_1: false
 rhel9cis_rule_3_4_2: false
+#Disable rsyslog/syslog-ng, using cloudwatch
+rhel9cis_rule_4_2_1: false
+#Disable password set for ec2-user
+rhel9cis_rule_5_3: false
+rhel9cis_rule_5_3_4: false
+#Disable root password check
+rhel9cis_rule_5_6_6: false
+
 # Setup hosts.allow entries
 rhel9cis_host_allow:
   - "127.0.0.1"
   - "10.0.0.0/255.0.0.0"
   - "172.16.0.0/255.240.0.0"
   - "192.168.0.0/255.255.0.0"
-
-

@@ -46,7 +46,7 @@ variable "aws_subnet_filter_name" {
 
 variable "configuration_group" {
   type        = string
-  default     = "unnamed"
+  default     = "rhel9-base"
   description = "The name of the group to which to add the instance for configuration purposes"
 }
 
@@ -82,7 +82,7 @@ variable "force_deregister" {
 
 variable "kms_key_id" {
   type        = string
-  default     = "alias/packer-builders-eu-west-2-kms"
+  default     = "alias/packer-builders-kms"
   description = "The KMS key ID or alias to use when encrypting the AMI EBS volumes; defaults to the AWS managed key if empty"
 }
 
@@ -131,10 +131,4 @@ variable "ssh_username" {
 variable "version" {
   type        = string
   description = "The semantic version number for the AMI; the version string will be appended automatically to the name tags added to the resulting AMI and snapshot(s)"
-}
-
-variable "boot_mode" {
-  type        = string
-  default     = "legacy-bios"
-  description = "Determines whether an instance should boot with in either legacy-bios or uefi mode"
 }
