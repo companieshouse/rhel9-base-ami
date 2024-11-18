@@ -35,13 +35,13 @@
             value: "1"
           when: repo_exists.stat.exists
       when: (ansible_os_family == 'RedHat') and (ansible_distribution_major_version | int == 9)
-
+    
     - name: Set timezone to Europe/London
       community.general.timezone:
         name: Europe/London
 
     - name: Install cloudwatch agent
-      ansible.builtin.command: dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+      ansible.builtin.command: dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm --nogpgcheck
     - name: Enable cloudwatch agent
       ansible.builtin.command: systemctl enable amazon-ssm-agent
     - name: Enable cloudwatch agent
