@@ -59,8 +59,14 @@
       community.general.timezone:
         name: Europe/London
 
-    - name: Install cloudwatch agent
-      ansible.builtin.command: dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+    # - name: Install cloudwatch agent
+    #   ansible.builtin.command: dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+    - name: install ssm agent
+      package:
+        name:  "{{ ssm_package }}"
+        state: present
+        disable_gpg_check: "{{ disable_yum_gpg_check | d(omit) }}"
+
     - name: Enable cloudwatch agent
       ansible.builtin.command: systemctl enable amazon-ssm-agent
     - name: Enable cloudwatch agent
