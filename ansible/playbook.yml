@@ -6,7 +6,7 @@
   pre_tasks:
     - name: Updating System Packages Before Ansible Run
       package:
-        name: '*'
+        name: "*"
         state: latest
     - name: CodeReady repo check
       block:
@@ -28,14 +28,14 @@
             path: /etc/yum.repos.d/redhat-rhui.repo
           register: repo_exists
         - name: Enable CodeReady repo on RHEL9
-          ini_file: 
+          ini_file:
             dest: /etc/yum.repos.d/redhat-rhui.repo
             section: codeready-builder-for-rhel-9-rhui-rpms
             option: enabled
             value: "1"
           when: repo_exists.stat.exists
       when: (ansible_os_family == 'RedHat') and (ansible_distribution_major_version | int == 9)
-    
+
     - name: Set timezone to Europe/London
       community.general.timezone:
         name: Europe/London
@@ -57,12 +57,12 @@
     - ch_collections.base.cron_control
     - ch_collections.security_banner.banner
 
-  tasks: 
+  tasks:
     - name: update iscsi config setting
-      lineinfile: 
+      lineinfile:
         path: /etc/iscsi/iscsid.conf
-        regexp: '^node.session.timeo.replacement_timeout = 120' 
-        line: 'node.session.timeo.replacement_timeout = 5'
+        regexp: "^node.session.timeo.replacement_timeout = 120"
+        line: "node.session.timeo.replacement_timeout = 5"
         backrefs: yes
 
     - name: Run multipath config tool to enable multipath and disable user friendly names
@@ -84,26 +84,26 @@
 
     - name: Configure auditd service
       ansible.builtin.lineinfile:
-        path:  "/etc/audit/auditd.conf"
+        path: "/etc/audit/auditd.conf"
         regexp: '^{{ item.key }}\s*=.*$'
         line: "{{ item.key }} = {{ item.value }}"
-      with_dict: 
+      with_dict:
         - max_log_file: 50
         - max_log_file_action: rotate
         - space_left_action: email
         - action_mail_acct: root
         - admin_space_left_action: rotate
         - log_format: "ENRICHED"
-   
+
     - name: Configure grub commandline options
       ansible.builtin.lineinfile:
         path: "/etc/default/grub"
         regexp: '^(GRUB_CMDLINE_LINUX=(?:(?![" ]{{ item.key | regex_escape }}=).)*)(?:[" ]{{ item.key | regex_escape }}=\S+)?(.*")$'
         line: '\1 {{ item.key | regex_escape }}={{ item.value | regex_escape }}\2'
         backrefs: yes
-      with_dict: 
-        - audit: 1  
-        
+      with_dict:
+        - audit: 1
+
     - name: Restrict Kernel log access
       block:
         - name: Copy kernel hardening file
@@ -112,7 +112,42 @@
             dest: /etc/sysctl.d/10-kernel-hardening.conf
             owner: root
             group: root
-            mode: '0600'
-            
+            mode: "0600"
+
     - name: Update Kernel Parameters
       command: sysctl -p
+
+    ### Level 1 CIS Scan ###
+    - name: Level 1 CIS - Set datetime variable
+      set_fact:
+        datetime: "{{ lookup('pipe', 'date +%Y%m%d_%H%M%S') }}"
+
+    - name: Level 1 CIS - Scan
+      command: >
+        sudo oscap xccdf eval
+        --profile xccdf_org.ssgproject.content_profile_cis_server_l1
+        --results ~/OpenScap_Results_{{ datetime }}.xml
+        /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
+      register: oscap_scan
+
+    - name: Level 1 CIS - Generate Report
+      command: >
+        sudo oscap xccdf generate report
+        --output ~/OpenScap_Report_{{ datetime }}.html
+        ~/OpenScap_Results_{{ datetime }}.xml
+      when: oscap_scan is succeeded
+      register: oscap_report
+
+    - name: Level 1 CIS - Extract Score
+      shell: >
+        sudo oscap info ~/OpenScap_Results_{{ datetime }}.xml
+        | grep "Score" | awk '{print $2}'
+      when: oscap_report is succeeded
+      register: cis_compliance_score
+
+    - name: Level 1 CIS - Display Score and Report Location
+      debug:
+        msg: |
+          Level 1 CIS Compliance Score: {{ cis_compliance_score.stdout }}%
+
+          Full report: lynx ~/OpenScap_Report_{{ datetime }}.html
