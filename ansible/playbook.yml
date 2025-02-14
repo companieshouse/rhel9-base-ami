@@ -129,7 +129,7 @@
         --results ~/OpenScap_Results_{{ datetime }}.xml
         /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
       register: oscap_scan
-      failed_when: oscan_scan.rc == 1
+      failed_when: oscap_scan.rc == 1
 
     - name: Level 1 CIS - Generate Report
       command: >
