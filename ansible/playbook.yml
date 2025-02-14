@@ -141,7 +141,7 @@
 
     - name: Level 1 CIS - Extract Score
       shell: >
-        sed -n 's/.*<score[^>]*>\([0-9]\+\.[0-9]\+\)<\/score>.*/\1/p' OpenScap_Results_20250213_172924.xml
+        sed -n 's/.*<score[^>]*>\([0-9]\+\.[0-9]\+\)<\/score>.*/\1/p' ~/OpenScap_Results_{{ datetime }}.xml
         | xargs printf "%.2f\n"
       when: oscap_report is succeeded
       register: cis_compliance_score
@@ -150,4 +150,4 @@
       debug:
         msg:
           - "Level 1 CIS Compliance Score: {{ cis_compliance_score.stdout }}%"
-          - "Full report: lynx ~/OpenScap_Report_20250213_172924.html"
+          - "Full report: lynx ~/OpenScap_Report_{{ datetime }}.html"
