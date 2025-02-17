@@ -81,5 +81,5 @@
 
 - name: Restart SSH service
   service:
-    name: ssh
+    name: sshd
     state: restarted
