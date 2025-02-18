@@ -1,0 +1,169 @@
+---
+## Limit Password Reuse: password-auth
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+
+- name: XCCDF Value var_password_pam_remember
+  set_fact:
+    var_password_pam_remember: !!str 24
+
+- name: XCCDF Value var_password_pam_remember_control_flag
+  set_fact:
+    var_password_pam_remember_control_flag: !!str requisite,required
+
+- name: Check authselect profile status
+  command: authselect check
+  register: result_authselect_check_cmd
+  failed_when: false
+  changed_when: false
+  when: '"pam" in ansible_facts.packages'
+
+- name: Select default authselect profile if none exists
+  command: authselect select sssd --force
+  when:
+    - '"pam" in ansible_facts.packages'
+    - result_authselect_check_cmd.rc != 0
+  register: authselect_select_result
+  failed_when: false
+
+- name: Create custom authselect profile
+  command: authselect create-profile hardening -b sssd
+  when:
+    - '"pam" in ansible_facts.packages'
+    - authselect_select_result is success
+  register: create_profile_result
+  failed_when: false
+
+- name: Select custom profile
+  command: authselect select custom/hardening --force
+  when:
+    - '"pam" in ansible_facts.packages'
+    - create_profile_result is success
+  register: select_custom_result
+
+- name: Configure password history in custom profile
+  lineinfile:
+    path: /etc/authselect/custom/hardening/password-auth
+    regexp: '^password\s+requisite\s+pam_pwhistory.so'
+    line: "password    requisite    pam_pwhistory.so remember={{ var_password_pam_remember }}"
+    state: present
+  when:
+    - '"pam" in ansible_facts.packages'
+    - select_custom_result is success
+
+- name: Apply authselect changes
+  command: authselect apply-changes -b
+  when:
+    - '"pam" in ansible_facts.packages'
+    - select_custom_result is success
+
+## Limit Password Reuse: system-auth
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+  tags:
+    - CCE-89176-2
+    - CJIS-5.6.2.1.1
+    - NIST-800-171-3.5.8
+    - NIST-800-53-IA-5(1)(e)
+    - NIST-800-53-IA-5(f)
+    - PCI-DSS-Req-8.2.5
+    - PCI-DSSv4-8.3
+    - PCI-DSSv4-8.3.7
+
+- name: XCCDF Value var_password_pam_remember
+  set_fact:
+    var_password_pam_remember: !!str 24
+  tags:
+    - always
+
+- name: XCCDF Value var_password_pam_remember_control_flag
+  set_fact:
+    var_password_pam_remember_control_flag: !!str requisite,required
+  tags:
+    - always
+
+- name: Check authselect profile status
+  command: authselect check
+  register: result_authselect_check_cmd
+  failed_when: false
+  changed_when: false
+  when: '"pam" in ansible_facts.packages'
+  tags:
+    - CCE-89176-2
+    - NIST-800-171-3.5.8
+
+- name: Select default authselect profile if none exists
+  command: authselect select sssd --force
+  when:
+    - '"pam" in ansible_facts.packages'
+    - result_authselect_check_cmd.rc != 0
+  register: authselect_select_result
+  failed_when: false
+  tags:
+    - CCE-89176-2
+    - NIST-800-171-3.5.8
+
+- name: Create custom authselect profile
+  command: authselect create-profile hardening -b sssd
+  when:
+    - '"pam" in ansible_facts.packages'
+    - authselect_select_result is success
+  register: create_profile_result
+  failed_when: false
+  tags:
+    - CCE-89176-2
+    - NIST-800-171-3.5.8
+
+- name: Select custom profile
+  command: authselect select custom/hardening --force
+  when:
+    - '"pam" in ansible_facts.packages'
+    - create_profile_result is success
+  register: select_custom_result
+  tags:
+    - CCE-89176-2
+    - NIST-800-171-3.5.8
+
+- name: Configure password history in custom profile
+  lineinfile:
+    path: /etc/authselect/custom/hardening/system-auth
+    regexp: '^password\s+requisite\s+pam_pwhistory.so'
+    line: "password    requisite    pam_pwhistory.so remember={{ var_password_pam_remember }}"
+    state: present
+  when:
+    - '"pam" in ansible_facts.packages'
+    - select_custom_result is success
+  tags:
+    - CCE-89176-2
+    - NIST-800-171-3.5.8
+
+- name: Apply authselect changes
+  command: authselect apply-changes -b
+  when:
+    - '"pam" in ansible_facts.packages'
+    - select_custom_result is success
+  tags:
+    - CCE-89176-2
+    - NIST-800-171-3.5.8
+
+## Set Password Maximum Consecutive Repeating Characters
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+- name: XCCDF Value var_password_pam_maxrepeat # promote to variable
+  set_fact:
+    var_password_pam_maxrepeat: !!str 3
+  tags:
+    - always
+
+- name:
+    Set Password Maximum Consecutive Repeating Characters - Ensure PAM variable
+    maxrepeat is set accordingly
+  ansible.builtin.lineinfile:
+    create: true
+    dest: /etc/security/pwquality.conf
+    regexp: ^#?\s*maxrepeat
+    line: maxrepeat = {{ var_password_pam_maxrepeat }}
+  when: '"pam" in ansible_facts.packages'
