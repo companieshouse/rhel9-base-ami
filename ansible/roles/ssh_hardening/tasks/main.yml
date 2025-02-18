@@ -2,7 +2,7 @@
 - name: Disable AllowTcpForwarding
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: "^#AllowTcpForwarding yes"
+    regexp: "^AllowTcpForwarding yes"
     line: AllowTcpForwarding no
     state: present
     backrefs: true
@@ -10,15 +10,15 @@
 - name: Set ClientAliveCountMax
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: "^#ClientAliveCountMax 3"
-    line: ClientAliveCountMax 2
+    regexp: "^ClientAliveCountMax 3"
+    line: ClientAliveCountMax 1
     state: present
     backrefs: true
 
 - name: Set log level
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: "^#LogLevel INFO"
+    regexp: "^LogLevel INFO"
     line: LogLevel VERBOSE
     state: present
     backrefs: true
@@ -26,7 +26,7 @@
 - name: Set MaxAuthTries
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: "^#MaxAuthTries 6"
+    regexp: "^MaxAuthTries 6"
     line: MaxAuthTries 3
     state: present
     backrefs: true
@@ -34,7 +34,7 @@
 - name: Set MaxSessions
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: "^#MaxSessions 10"
+    regexp: "^MaxSessions 10"
     line: MaxSessions 2
     state: present
     backrefs: true
@@ -42,7 +42,7 @@
 - name: Disable TCPKeepAlive
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: "^#TCPKeepAlive yes"
+    regexp: "^TCPKeepAlive yes"
     line: TCPKeepAlive no
     state: present
     backrefs: true
