@@ -59,8 +59,15 @@
     - ch_collections.base.cloudwatch_agent_helper
     - ch_collections.base.cron_control
     - ch_collections.security_banner.banner
-    - ssh_hardening
     - crypto_policy
+    - journald
+    - pam
+    - password_policy
+    - ptrace
+    - session_timeout
+    - ssh_hardening
+    - umask
+    - user_init
     - verify_audit_tools
 
   tasks:
