@@ -57,8 +57,6 @@ rhel9cis_rule_3_4_1: false
 rhel9cis_rule_3_4_2: false
 #Disable rsyslog/syslog-ng, using cloudwatch
 rhel9cis_rule_4_2_1: false
-   - include_role:
-       name: zabbix
 
 # Setup hosts.allow entries
 rhel9cis_host_allow:
