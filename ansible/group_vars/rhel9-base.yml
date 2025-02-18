@@ -59,9 +59,6 @@ rhel9cis_rule_3_4_2: false
 rhel9cis_rule_4_2_1: false
 #Allow no password set for EC2 user
 rhel9cis_rule_5_3_4: false
-#Disable root password check
-rhel9cis_rule_5_4_2: false
-rhel9cis_rule_5_4_2_4: false
 
 # Setup hosts.allow entries
 rhel9cis_host_allow:

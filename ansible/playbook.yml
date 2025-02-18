@@ -47,6 +47,9 @@
     - name: Enable cloudwatch agent
       ansible.builtin.command: systemctl start amazon-ssm-agent
 
+    - name: Set root password.
+      shell: openssl rand -base64 200 | tr -d '\n' | passwd --stdin root
+
   roles:
     - geerlingguy.repo-epel
     - ch_collections.base.os_package_control
