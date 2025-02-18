@@ -58,6 +58,7 @@
     - ch_collections.security_banner.banner
     - ssh_hardening
     - crypto_policy
+    - verify_audit_tools
 
   tasks:
     - name: update iscsi config setting
