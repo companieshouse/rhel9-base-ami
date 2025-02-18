@@ -57,6 +57,7 @@
     - ch_collections.base.cron_control
     - ch_collections.security_banner.banner
     - ssh_hardening
+    - crypto_policy
 
   tasks:
     - name: update iscsi config setting
@@ -155,7 +156,7 @@
 
     - name: Clone git rep
       ansible.builtin.git:
-        repo: 'https://github.com/CISOfy/lynis.git'
+        repo: "https://github.com/CISOfy/lynis.git"
         dest: $HOME/lynis
         clone: true
 
@@ -168,7 +169,7 @@
       register: found_directories
 
     - debug:
-         msg: "{{ [item.path] }}"
+        msg: "{{ [item.path] }}"
       with_items: "{{ found_directories.files }}"
 
     - name: Run scan and output to file
