@@ -63,7 +63,6 @@
     - crypto_policy
     - disable_mounting
     - journald
-    - network_security
     - pam
     - password_policy
     - ptrace
@@ -72,6 +71,7 @@
     - umask
     - user_init
     - verify_audit_tools
+    - network_security
 
   tasks:
     - name: update iscsi config setting
