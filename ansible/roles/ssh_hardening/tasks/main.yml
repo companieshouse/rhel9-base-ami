@@ -26,7 +26,7 @@
 - name: Set MaxAuthTries
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: "^MaxAuthTries 6"
+    regexp: "^MaxAuthTries 4"
     line: MaxAuthTries 3
     state: present
     backrefs: true
@@ -34,7 +34,7 @@
 - name: Set MaxSessions
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: "^MaxSessions 10"
+    regexp: "^MaxSessions 4"
     line: MaxSessions 2
     state: present
     backrefs: true
