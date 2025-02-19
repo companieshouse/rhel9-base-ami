@@ -1,0 +1,28 @@
+---
+## Install hardening packages
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+
+# Install security scanning tools and dependencies
+- name: Install security scanning tools and dependencies
+  package:
+    name:
+      - openscap-scanner
+      - scap-security-guide
+      - lynx
+      - findutils
+      - procps
+      - passwd
+      - hostname
+    state: present
+  when: '"kernel" in ansible_facts.packages'
+
+# Install required system monitoring packages
+- name: Install system monitoring packages
+  package:
+    name:
+      - systemd-journal-remote
+      - sysstat
+    state: present
+  when: '"kernel" in ansible_facts.packages'

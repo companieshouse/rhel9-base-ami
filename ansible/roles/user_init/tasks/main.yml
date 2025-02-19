@@ -12,22 +12,12 @@
 - name: XCCDF Value var_user_initialization_files_regex # promote to variable
   set_fact:
     var_user_initialization_files_regex: !!str ^\.[\w\- ]+$
-  tags:
-    - always
 
 - name:
     Ensure All User Initialization Files Have Mode 0740 Or Less Permissive - Gather
     User Info
   ansible.builtin.getent:
     database: passwd
-  tags:
-    - CCE-83637-9
-    - file_permission_user_init_files
-    - low_complexity
-    - low_disruption
-    - medium_severity
-    - no_reboot_needed
-    - restrict_strategy
 
 - name:
     Ensure All User Initialization Files Have Mode 0740 Or Less Permissive - Find
@@ -43,14 +33,6 @@
     - item.key not in ["nobody", "nfsnobody"]
     - item.value[1] | int >= 1000
   register: found_init_files
-  tags:
-    - CCE-83637-9
-    - file_permission_user_init_files
-    - low_complexity
-    - low_disruption
-    - medium_severity
-    - no_reboot_needed
-    - restrict_strategy
 
 - name:
     Ensure All User Initialization Files Have Mode 0740 Or Less Permissive - Fix
@@ -60,11 +42,3 @@
     mode: u-s,g-wxs,o=
   loop: "{{ q('ansible.builtin.subelements', found_init_files.results, 'files',
     {'skip_missing': True}) }}"
-  tags:
-    - CCE-83637-9
-    - file_permission_user_init_files
-    - low_complexity
-    - low_disruption
-    - medium_severity
-    - no_reboot_needed
-    - restrict_strategy

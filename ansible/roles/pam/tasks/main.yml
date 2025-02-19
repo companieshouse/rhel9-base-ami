@@ -79,8 +79,6 @@
 - name: XCCDF Value var_pam_wheel_group_for_su # promote to variable
   set_fact:
     var_pam_wheel_group_for_su: !!str sugroup
-  tags:
-    - always
 
 - name:
     Ensure the Group Used by pam_wheel.so Module Exists on System and is Empty
@@ -107,8 +105,6 @@
 - name: XCCDF Value var_pam_wheel_group_for_su # promote to variable
   set_fact:
     var_pam_wheel_group_for_su: !!str sugroup
-  tags:
-    - always
 
 - name:
     Enforce Usage of pam_wheel with Group Parameter for su Authentication - Add
