@@ -19,6 +19,10 @@
   when: '"kernel" in ansible_facts.packages'
 
 # Install required system monitoring packages
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+
 - name: Install system monitoring packages
   package:
     name:
