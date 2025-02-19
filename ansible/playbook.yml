@@ -60,6 +60,7 @@
     - ch_collections.base.cron_control
     - ch_collections.security_banner.banner
     - crypto_policy
+    - disable_mounting
     - journald
     - pam
     - password_policy
