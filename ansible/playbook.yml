@@ -59,6 +59,7 @@
     - ch_collections.base.cloudwatch_agent_helper
     - ch_collections.base.cron_control
     - ch_collections.security_banner.banner
+    - hardening_packages
     - crypto_policy
     - disable_mounting
     - journald
@@ -70,6 +71,7 @@
     - umask
     - user_init
     - verify_audit_tools
+    - network_security
 
   tasks:
     - name: update iscsi config setting
