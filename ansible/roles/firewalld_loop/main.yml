@@ -1,5 +1,4 @@
 ---
-
 ### Restricts loopback traffic ###
 
 - name: Configure Firewalld to Restrict Loopback Traffic - Ensure firewalld Package
