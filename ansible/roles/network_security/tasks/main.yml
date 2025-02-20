@@ -73,3 +73,130 @@
   when:
     - '"kernel" in ansible_facts.packages'
     - result_systemd_unit_files.stdout_lines is search("systemd-journal-remote.socket")
+
+### Restricts loopback traffic ###
+
+- name: Configure Firewalld to Restrict Loopback Traffic - Ensure firewalld Package
+    is Installed
+  ansible.builtin.package:
+    name: '{{ item }}'
+    state: present
+  with_items:
+  - firewalld
+  when: '"kernel" in ansible_facts.packages'
+
+
+- name: Configure Firewalld to Restrict Loopback Traffic - Collect Facts About System
+    Services
+  ansible.builtin.service_facts: null
+  register: result_services_states
+  when: '"kernel" in ansible_facts.packages'
+
+
+- name: Configure Firewalld to Restrict Loopback Traffic - Remediation is Applicable
+    if firewalld Service is Running
+  block:
+
+  - name: Configure Firewalld to Restrict Loopback Traffic - Ensure firewalld trusted
+      Zone Restricts IPv4 Loopback Traffic
+    ansible.builtin.command:
+      cmd: firewall-cmd --permanent --zone=trusted --add-rich-rule='rule family=ipv4
+        source address="127.0.0.1" destination not address="127.0.0.1" drop'
+    register: result_trusted_ipv4_restriction
+    changed_when:
+    - '''ALREADY_ENABLED'' not in result_trusted_ipv4_restriction.stderr'
+
+  - name: Configure Firewalld to Restrict Loopback Traffic - Ensure firewalld trusted
+      Zone Restricts IPv6 Loopback Traffic
+    ansible.builtin.command:
+      cmd: firewall-cmd --permanent --zone=trusted --add-rich-rule='rule family=ipv6
+        source address="::1" destination not address="::1" drop'
+    register: result_trusted_ipv6_restriction
+    changed_when:
+    - '''ALREADY_ENABLED'' not in result_trusted_ipv6_restriction.stderr'
+
+  - name: Configure Firewalld to Restrict Loopback Traffic - Ensure firewalld Changes
+      are Applied
+    ansible.builtin.service:
+      name: firewalld
+      state: reloaded
+    when:
+    - result_trusted_ipv4_restriction is changed or result_trusted_ipv6_restriction
+      is changed
+  when:
+  - '"kernel" in ansible_facts.packages'
+  - ansible_facts.services['firewalld.service'].state == 'running'
+
+
+- name: Configure Firewalld to Restrict Loopback Traffic - Informative Message Based
+    on Service State
+  ansible.builtin.assert:
+    that:
+    - ansible_facts.services['firewalld.service'].state == 'running'
+    fail_msg:
+    - firewalld service is not active. Remediation aborted!
+    - This remediation could not be applied because it depends on firewalld service
+      running.
+    - The service is not started by this remediation in order to prevent connection
+      issues.
+    success_msg:
+    - Configure Firewalld to Restrict Loopback Traffic remediation successfully executed
+  when: '"kernel" in ansible_facts.packages'
+
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+
+
+- name: Configure Firewalld to Trust Loopback Traffic - Ensure firewalld Package is
+    Installed
+  ansible.builtin.package:
+    name: '{{ item }}'
+    state: present
+  with_items:
+  - firewalld
+  when: '"kernel" in ansible_facts.packages'
+
+- name: Configure Firewalld to Trust Loopback Traffic - Collect Facts About System
+    Services
+  ansible.builtin.service_facts: null
+  register: result_services_states
+  when: '"kernel" in ansible_facts.packages'
+
+- name: Configure Firewalld to Trust Loopback Traffic - Remediation is Applicable
+    if firewalld Service is Running
+  block:
+
+  - name: Configure Firewalld to Trust Loopback Traffic - Ensure firewalld trusted
+      Zone Includes lo Interface
+    ansible.builtin.command:
+      cmd: firewall-cmd --permanent --zone=trusted --add-interface=lo
+    register: result_lo_interface_assignment
+    changed_when:
+    - '''ALREADY_ENABLED'' not in result_lo_interface_assignment.stderr'
+
+  - name: Configure Firewalld to Trust Loopback Traffic - Ensure firewalld Changes
+      are Applied
+    ansible.builtin.service:
+      name: firewalld
+      state: reloaded
+    when:
+    - result_lo_interface_assignment is changed
+  when:
+  - '"kernel" in ansible_facts.packages'
+  - ansible_facts.services['firewalld.service'].state == 'running'
+
+- name: Configure Firewalld to Trust Loopback Traffic - Informative Message Based
+    on Service State
+  ansible.builtin.assert:
+    that:
+    - ansible_facts.services['firewalld.service'].state == 'running'
+    fail_msg:
+    - firewalld service is not active. Remediation aborted!
+    - This remediation could not be applied because it depends on firewalld service
+      running.
+    - The service is not started by this remediation in order to prevent connection
+      issues.
+    success_msg:
+    - Configure Firewalld to Trust Loopback Traffic remediation successfully executed
+  when: '"kernel" in ansible_facts.packages'
