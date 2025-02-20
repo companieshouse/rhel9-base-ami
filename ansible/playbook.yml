@@ -71,6 +71,7 @@
     - user_init
     - verify_audit_tools
     - network_security
+    - firewalld_loop
 
   tasks:
     - name: update iscsi config setting
