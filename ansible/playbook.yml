@@ -132,6 +132,10 @@
     - name: Update Kernel Parameters
       command: sysctl -p
 
+    - name: Prevent Login to Accounts With Empty Password
+      include_role:
+        name: prevent_empty_password
+
     ### Level 1 CIS Scan ###
     - name: Level 1 CIS - Set datetime variable
       set_fact:
