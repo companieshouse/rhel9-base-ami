@@ -62,7 +62,6 @@
     - crypto_policy
     - disable_mounting
     - journald
-    - pam
     - password_policy
     - ptrace
     - session_timeout
@@ -70,6 +69,7 @@
     - umask
     - user_init
     - verify_audit_tools
+    - pam
     - network_security
 
   tasks:
