@@ -133,7 +133,7 @@
       command: sysctl -p
       
     - name: Disable and mask firewalld
-      ansible.builtin.systemd_service:
+      ansible.builtin.systemd:
         name: firewalld
         state: stopped
         enabled: false
