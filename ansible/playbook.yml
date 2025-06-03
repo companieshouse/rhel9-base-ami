@@ -131,6 +131,13 @@
 
     - name: Update Kernel Parameters
       command: sysctl -p
+      
+    - name: Disable and mask firewalld
+      ansible.builtin.systemd_service:
+        name: firewalld
+        state: stopped
+        masked: yes
+        
 
     ### Level 1 CIS Scan ###
     - name: Level 1 CIS - Set datetime variable
