@@ -204,3 +204,29 @@
       file:
         path: $HOME/lynis
         state: absent
+
+    - name: Check if firewalld package is installed
+      package_facts:
+        manager: auto
+
+    - name: Display firewalld package status
+      debug:
+        msg: "firewalld package is {{ 'installed' if 'firewalld' in ansible_facts.packages else 'not installed' }}"
+
+    - name: Check firewalld service status
+      service_facts:
+      register: services_state
+
+    - name: Display firewalld status
+      debug:
+        msg: "firewalld is {{ 'running' if services_state.ansible_facts.services['firewalld.service'].state == 'running' else 'not running' }}"
+
+    - name: Check firewalld status with systemctl
+      command: systemctl status firewalld
+      register: firewalld_status
+      failed_when: false
+      changed_when: false
+
+    - name: Display firewalld status
+      debug:
+        var: firewalld_status.stdout_lines
