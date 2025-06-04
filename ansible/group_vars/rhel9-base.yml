@@ -60,10 +60,9 @@ rhel9cis_rule_1_4_2: false
 #Disable Firewall Tasks, we manage this in app deploy
 rhel9cis_rule_3_4_1_1: false
 rhel9cis_rule_3_4_1_2: false
-#add these if not skipped on PR run
-#rhel9cis_rule_3_4_2_1: false
-#rhel9cis_rule_3_4_2_4: false
-#rhel9cis_rule_3_4_2_5: false
+rhel9cis_rule_3_4_2_1: false
+rhel9cis_rule_3_4_2_4: false
+rhel9cis_rule_3_4_2_5: false
 
 #Disable rsyslog/syslog-ng, using cloudwatch
 rhel9cis_rule_4_2_1_1: false
