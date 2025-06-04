@@ -50,15 +50,29 @@ cwa_conf_json_file_content: "{{ lookup('file', 'files/cloudwatch-config.json') }
 ## CIS Hardening Variables
 rhel9cis_time_synchronization: chrony
 rhel9cis_time_synchronization_servers: ["169.254.169.123"] #Default VPC source
+
 #Disable crypto setting changes as it causes DNF to fail installs
 rhel9cis_rule_1_10: false
+
 #Disable GRUB tasks
 rhel9cis_rule_1_4_2: false
+
 #Disable Firewall Tasks, we manage this in app deploy
-rhel9cis_rule_3_4_1: false
-rhel9cis_rule_3_4_2: false
+rhel9cis_rule_3_4_1_1: false
+rhel9cis_rule_3_4_1_2: false
+rhel9cis_rule_3_4_2_1: false
+rhel9cis_rule_3_4_2_4: false
+rhel9cis_rule_3_4_2_5: false
+
 #Disable rsyslog/syslog-ng, using cloudwatch
-rhel9cis_rule_4_2_1: false
+rhel9cis_rule_4_2_1_1: false
+rhel9cis_rule_4_2_1_2: false
+rhel9cis_rule_4_2_1_3: false
+rhel9cis_rule_4_2_1_4: false
+rhel9cis_rule_4_2_1_5: false
+rhel9cis_rule_4_2_1_6: false
+rhel9cis_rule_4_2_1_7: false
+
 #Allow no password set for EC2 user
 rhel9cis_rule_5_3_4: false
 
