@@ -71,6 +71,7 @@
     - verify_audit_tools
     - pam
     - network_security
+    - aws-cli
 
   tasks:
     - name: update iscsi config setting
