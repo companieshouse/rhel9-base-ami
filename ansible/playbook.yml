@@ -1,5 +1,5 @@
 ---
-- hosts: rhel9-base
+- hosts: rhel10-base
   become: true
   collections:
     - ch_collections.base
@@ -34,7 +34,7 @@
             option: enabled
             value: "1"
           when: repo_exists.stat.exists
-      when: (ansible_os_family == 'RedHat') and (ansible_distribution_major_version | int == 9)
+      when: (ansible_os_family == 'RedHat') and (ansible_distribution_major_version | int == 10)
 
     - name: Set timezone to Europe/London
       community.general.timezone:
