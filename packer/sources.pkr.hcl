@@ -1,5 +1,6 @@
 source "amazon-ebs" "builder" {
   ami_name                  = "${var.ami_name_prefix}-${var.version}"
+  ami_regions               = var.ami_regions
   ami_users                 = var.ami_account_ids
   communicator              = "ssh"
   force_delete_snapshot     = var.force_delete_snapshot
@@ -49,7 +50,13 @@ source "amazon-ebs" "builder" {
 
   run_tags = {
     AMI     = "${var.ami_name_prefix}"
+    Name    = "packer-builder-${var.ami_name_prefix}-${var.version}"
     Service = "packer-builder"
+  }
+
+  run_volume_tags = {
+    Builder = "packer-builder"
+    Name    = "${var.ami_name_prefix}-${var.version}"
   }
 
   tags = {
