@@ -1,34 +1,35 @@
 ---
 ## Add any additional packages
 additional_packages:
-  - nfs-utils
-  - iscsi-initiator-utils
-  - device-mapper-multipath
-  - sg3_utils
-  - git
-  - screen
-  - logrotate
-  - lvm2
-  - python3
-  - python3-pip
-  - python3-libselinux
-  - python3-libsemanage
-  - python3-policycoreutils
-  - python39
-  - chrony
+  - audispd-plugins
   - audit
   - audit-libs
-  - audispd-plugins
-  - rsyslog
-  - openscap-scanner
-  - scap-security-guide
-  - lynx
+  - chrony
+  - device-mapper-multipath
   - findutils
-  - procps
-  - passwd
+  - git
   - hostname
-  - systemd-journal-remote
+  - iscsi-initiator-utils
+  - logrotate
+  - lvm2
+  - lynx
+  - nfs-utils
+  - nmap-ncat
+  - openscap-scanner
+  - passwd
+  - procps
+  - python3
+  - python3-libselinux
+  - python3-libsemanage
+  - python3-pip
+  - python3-policycoreutils
+  - python39
+  - rsyslog
+  - scap-security-guide
+  - screen
+  - sg3_utils
   - sysstat
+  - systemd-journal-remote
   - unzip
   - wget
 
