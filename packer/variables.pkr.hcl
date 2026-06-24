@@ -74,6 +74,12 @@ variable "data_volume_throughput" {
   description = "The throughput, in MiB/s, for the data EBS volume; 125 is the gp3 default"
 }
 
+variable "build_date" {
+  type        = string
+  default     = ""
+  description = "ISO 8601 UTC (human-readable) timestamp of the build; surfaced as the AMI's BuildDate tag"
+}
+
 variable "force_delete_snapshot" {
   type        = bool
   default     = false
