@@ -31,6 +31,7 @@ additional_packages:
   - sysstat
   - systemd-journal-remote
   - unzip
+  - vim
   - wget
 
 ssm_package:
@@ -52,6 +53,7 @@ cwa_conf_json_file_content: "{{ lookup('file', 'files/cloudwatch-config.json') }
 ## CIS Hardening Variables
 rhel9cis_time_synchronization: chrony
 rhel9cis_time_synchronization_servers: ["169.254.169.123"] #Default VPC source
+rhel9cis_chrony_server_minsources: 1
 
 #Disable crypto setting changes as it causes DNF to fail installs
 rhel9cis_rule_1_10: false
