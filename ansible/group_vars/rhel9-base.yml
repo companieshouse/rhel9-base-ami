@@ -31,6 +31,7 @@ additional_packages:
   - sysstat
   - systemd-journal-remote
   - unzip
+  - vim
   - wget
 
 ssm_package:
