@@ -4,6 +4,7 @@ additional_packages:
   - audispd-plugins
   - audit
   - audit-libs
+  - bat
   - chrony
   - device-mapper-multipath
   - findutils
